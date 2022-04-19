@@ -7,45 +7,45 @@ services:
     volumes:
       - ./vroom-conf/:/conf
     environment:
-      - VROOM_ROUTER=osrm  # router to use, osrm, valhalla or ors
+      - VROOM_ROUTER=valhalla  # router to use, osrm, valhalla or ors
     depends_on:
-      - osrm
+      - valhalla
 
   # EXAMPLE for OSRM, please consult the repo for details: https://hub.docker.com/r/osrm/osrm-backend/
-  osrm:
-    image: osrm/osrm-backend
-    container_name: osrm
-    restart: always
-    ports:
-      - 5000:5000
-    volumes:
-      - ./osrm:/data
-    command: "osrm-routed --max-matching-size 1000 --max-table-size 1000 --max-viaroute-size 1000 --algorithm mld /data/map.osrm"
+  # osrm:
+  #   image: osrm/osrm-backend
+  #   container_name: osrm
+  #   restart: always
+  #   ports:
+  #     - 5000:5000
+  #   volumes:
+  #     - ./osrm:/data
+  #   command: "osrm-routed --max-matching-size 1000 --max-table-size 1000 --max-viaroute-size 1000 --algorithm mld /data/map.osrm"
 
   # EXAMPLE for Valhalla, please consult the repo for details: https://github.com/gis-ops/docker-valhalla
-#  valhalla:
-#    image: gisops/valhalla:latest
-#    container_name: valhalla_latest
-#    ports:
-#      - 8002:8002
-#    build:
-#      context: .
-#     # in case you need to build image without requiring sudo privileges on the files created by the container, you should provide your user's UID/GID
-#      args:
-#        - VALHALLA_UID=1000
-#        - VALHALLA_GID=1000
-#    volumes:
-#      - ./custom_files:/custom_files
-#    environment:
-#      # Auto-download PBFs from Geofabrik
-#      - tile_urls=https://download.geofabrik.de/europe/andorra-latest.osm.pbf
-#      - server_threads=2  # determines how many threads will be used to run the valhalla server
-#      - use_tiles_ignore_pbf=True  # load existing valhalla_tiles.tar directly
-#      - build_elevation=True  # build elevation with "True" or "Force": will download only the elevation for areas covered by the graph tiles
-#      - build_admins=True  # build admins db with "True" or "Force"
-#      - build_time_zones=True  # build timezone db with "True" or "Force"
-#      - build_tar=True  # build an indexed tar file from the tile_dir for faster graph loading times
-#      - force_rebuild=False  # forces a rebuild of the routing tiles with "True"
+  valhalla:
+    image: gisops/valhalla:latest
+    container_name: valhalla_latest
+    ports:
+      - 8002:8002
+    build:
+      context: .
+      # in case you need to build image without requiring sudo privileges on the files created by the container, you should provide your user's UID/GID
+      args:
+        - VALHALLA_UID=1000
+        - VALHALLA_GID=1000
+    volumes:
+      - ./custom_files:/custom_files
+    environment:
+      # Auto-download PBFs from Geofabrik
+      - tile_urls=https://download.geofabrik.de/europe/andorra-latest.osm.pbf
+      - server_threads=2  # determines how many threads will be used to run the valhalla server
+      - use_tiles_ignore_pbf=True  # load existing valhalla_tiles.tar directly
+      - build_elevation=True  # build elevation with "True" or "Force": will download only the elevation for areas covered by the graph tiles
+      - build_admins=True  # build admins db with "True" or "Force"
+      - build_time_zones=True  # build timezone db with "True" or "Force"
+      - build_tar=True  # build an indexed tar file from the tile_dir for faster graph loading times
+      - force_rebuild=False  # forces a rebuild of the routing tiles with "True"
 
   # EXAMPLE for OpenRouteService, please consult the repo for details: https://github.com/GIScience/openrouteservice
 #  ors:
